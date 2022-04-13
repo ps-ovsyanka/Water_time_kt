@@ -3,6 +3,8 @@ package com.example.water_time_kt.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import androidx.room.TypeConverters
+import com.example.water_time_kt.domain.DrinkItemsTypeConverters
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -13,6 +15,6 @@ class DrinkDay(@PrimaryKey(autoGenerate = true)
                var completed : Boolean = false) {
     val date = SimpleDateFormat("dd.MM").format(Date())
 
-    @Relation(parentColumn = "id", entityColumn = "day_id")
+    @TypeConverters(DrinkItemsTypeConverters::class)
     var drinkItems: MutableList<Int> = ArrayList() //список приемов воды
 }
