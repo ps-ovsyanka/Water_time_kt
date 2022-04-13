@@ -8,11 +8,11 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.water_time_kt.SettingsFragment"
+        android:name="com.example.water_time_kt.ui.fragments.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.water_time_kt.MainFragment"
+        android:name="com.example.water_time_kt.ui.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" />
 </navigation>
