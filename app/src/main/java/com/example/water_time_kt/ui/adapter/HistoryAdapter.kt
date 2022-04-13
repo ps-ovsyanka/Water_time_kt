@@ -10,11 +10,10 @@ import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 
 class HistoryAdapter(
-    private val values: List<DrinkDay>
+    private val values: MutableList<DrinkDay>
 ) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.list_history_item, parent, false)
         )

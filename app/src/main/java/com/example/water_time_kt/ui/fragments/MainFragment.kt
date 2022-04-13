@@ -9,9 +9,14 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.water_time_kt.R
+import com.example.water_time_kt.ui.MainActivity
+import java.lang.String
 
 
 class MainFragment : Fragment(), View.OnClickListener {
+
+    val activity : MainActivity = getActivity() as MainActivity
+
     private lateinit var waterProgressText : TextView
     private lateinit var waterTargetText : TextView
     private lateinit var waterProgressBar : ProgressBar
@@ -25,6 +30,7 @@ class MainFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
@@ -46,7 +52,18 @@ class MainFragment : Fragment(), View.OnClickListener {
 
 
     fun updateProgress (value: Int){
+        activity.waterProgress +=  value//изменение основной переменной прогресса
 
+        waterProgressText.setText(String.valueOf(activity.waterProgress))
+        waterProgressBar.progress = activity.waterProgress
+        activity.drinkDays.last().dayResult = activity.waterProgress
+        //если цель достигнута то день выполнен
+        //если цель достигнута то день выполнен
+        if (activity.drinkDays.last().dayResult >= activity.waterTarget) {
+            activity.drinkDays.last().completed = true
+        } else {
+            activity.drinkDays.last().completed = false
+        }
     }
 
     override fun onClick(view: View?) {

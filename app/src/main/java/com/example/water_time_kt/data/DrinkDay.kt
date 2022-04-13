@@ -8,7 +8,9 @@ import java.util.*
 @Entity(tableName = "DrinkDays")
 class DrinkDay(@PrimaryKey(autoGenerate = true)
                val id : Long = 0,
-               val dayResult : Int = 0,
-               val completed : Boolean = false) {
+               var dayResult : Int = 0,
+               var completed : Boolean = false) {
     val date = SimpleDateFormat("dd.MM").format(Date())
+
+
 }

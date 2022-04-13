@@ -14,7 +14,7 @@ import com.example.water_time_kt.ui.adapter.HistoryAdapter
  * A fragment representing a list of Items.
  */
 class HistoryFragment : Fragment() {
-    var listHistory: RecyclerView? = null
+    lateinit var listHistory: RecyclerView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -22,7 +22,7 @@ class HistoryFragment : Fragment() {
     ): View {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
         listHistory = root.findViewById(R.id.list_history) //инициализация списка
-        listHistory.setAdapter(HistoryAdapter()) //присвоение адаптера списку
+        listHistory.adapter = HistoryAdapter((getActivity() as MainActivity).drinkDays) //присвоение адаптера списку
         return root
     }
 }
