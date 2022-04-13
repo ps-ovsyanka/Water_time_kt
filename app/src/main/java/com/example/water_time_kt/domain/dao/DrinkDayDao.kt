@@ -18,5 +18,5 @@ interface DrinkDayDao {
     suspend fun getById(id : Long) : DrinkDay?
 
     @Query("select * from DrinkDays")
-    suspend fun getAllDays(id : Long) : List<DrinkDay>
+    suspend fun getAllDays() : List<DrinkDay>
 }
