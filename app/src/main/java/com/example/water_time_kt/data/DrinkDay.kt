@@ -1,8 +1,10 @@
-package com.example.water_time_kt
+package com.example.water_time_kt.data
 
+import android.arch.persistence.room.Entity
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Entity(tableName = "DrinkDays")
 class DrinkDay() {
 
     val id : Long = 0
