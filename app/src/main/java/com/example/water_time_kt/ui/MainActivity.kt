@@ -1,18 +1,16 @@
 package com.example.water_time_kt.ui
 
-import android.arch.persistence.room.Room
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.AppBarConfiguration.Builder
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.room.Room
 import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.domain.AppDatabase
