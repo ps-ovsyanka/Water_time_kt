@@ -21,9 +21,8 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
-        val adapter = HistoryAdapter() //создание адаптера для списка
         listHistory = root.findViewById(R.id.list_history) //инициализация списка
-        listHistory.setAdapter(adapter) //присвоение адаптера списку
+        listHistory.setAdapter(HistoryAdapter()) //присвоение адаптера списку
         return root
     }
 }

@@ -18,12 +18,16 @@ import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.domain.AppDatabase
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
+    val DB_NAME = "database"
     val TARGET = "water_target"
     val SIZE_TARE_1 = "size_tare_1"
     val SIZE_TARE_2 = "size_tare_2"
@@ -35,9 +39,11 @@ class MainActivity : AppCompatActivity() {
 
     val pref: SharedPreferences = getPreferences(android.content.Context.MODE_PRIVATE)
 
+    private val coroutineIO = CoroutineScope(Dispatchers.IO)
+
     val database = Room.databaseBuilder(
         applicationContext,
-        AppDatabase::class.java, "database"
+        AppDatabase::class.java, DB_NAME
     ).build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             ed.putString(SIZE_TARE_3, "500").commit()
             pref.edit().putBoolean("firstrun", false).commit()
         }
+        getDataFromDB()
     }
 
     override fun onStop() {
@@ -72,9 +79,10 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    private suspend fun getDataFromDB() {
-
-        drinkDays = database.drinkDayDao().getAllDays().toMutableList()
+    private fun getDataFromDB() {
+        coroutineIO.launch{
+            drinkDays = database.drinkDayDao().getAllDays().toMutableList()
+        }
         //если дата другая, создать новый день
         val today = SimpleDateFormat("dd.MM").format(Date())
         if (today != drinkDays.last().date) { //если даты разные
@@ -83,11 +91,13 @@ class MainActivity : AppCompatActivity() {
         waterProgress = drinkDays.last().dayResult
     }
 
-    private suspend fun updateDB() {
-        if (database.drinkDayDao().getAllDays().size < drinkDays.size) { //если добавился новый день
-            database.drinkDayDao().insert(drinkDays.last())
-        } else { //если нужно обновить старый
-            database.drinkDayDao().update(drinkDays.last())
+    private fun updateDB() {
+        coroutineIO.launch {
+            if (database.drinkDayDao().getAllDays().size < drinkDays.size) { //если добавился новый день
+                database.drinkDayDao().insert(drinkDays.last())
+            } else { //если нужно обновить старый
+                database.drinkDayDao().update(drinkDays.last())
+            }
         }
     }
 }

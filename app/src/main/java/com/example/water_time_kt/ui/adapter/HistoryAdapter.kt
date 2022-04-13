@@ -1,17 +1,14 @@
 package com.example.water_time_kt.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
-import com.example.water_time_kt.databinding.FragmentHistoryBinding
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
 class HistoryAdapter(
     private val values: List<DrinkDay>
 ) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
@@ -19,13 +16,8 @@ class HistoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         return ViewHolder(
-            FragmentHistoryBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+                LayoutInflater.from(parent.context).inflate(R.layout.list_history_item, parent, false)
         )
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -37,12 +29,11 @@ class HistoryAdapter(
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(binding: FragmentHistoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        val volume: TextView
-        val time: TextView
-        val checkBox: CheckBox
-
+    inner class ViewHolder(view: View) :
+        RecyclerView.ViewHolder(view) {
+        val volume: TextView = view.findViewById<View>(R.id.history_item_volume) as TextView
+        val time: TextView = view.findViewById<View>(R.id.history_item_time) as TextView
+        val checkBox: CheckBox = view.findViewById<View>(R.id.checkBox) as CheckBox
     }
 
 }
