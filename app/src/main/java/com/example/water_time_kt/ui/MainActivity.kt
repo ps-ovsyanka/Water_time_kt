@@ -11,6 +11,8 @@ import androidx.navigation.ui.AppBarConfiguration.Builder
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.domain.AppDatabase
@@ -32,6 +34,11 @@ class MainActivity : AppCompatActivity() {
         val PREF_TARE_NAME = arrayOf("size_tare_1", "size_tare_2", "size_tare_3")
         val PREF_FIRSTRUN = "firstrun"
         val DATE_FORMAT = "dd.MM"
+        val MIGRATION_1_2: Migration =  object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE drinkDays ADD COLUMN description VARCHAR NOT NULL")
+            }
+        }
     }
 
     var waterProgress = 0
@@ -45,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     val database = Room.databaseBuilder(
         applicationContext,
         AppDatabase::class.java, DB_NAME
-    ).build()
+    ).addMigrations(MIGRATION_1_2).build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
