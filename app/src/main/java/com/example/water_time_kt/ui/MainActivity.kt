@@ -24,11 +24,15 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val DB_NAME = "database"
-    val TARGET = "water_target"
-    val SIZE_TARE_1 = "size_tare_1"
-    val SIZE_TARE_2 = "size_tare_2"
-    val SIZE_TARE_3 = "size_tare_3"
+    companion object {
+        val DB_NAME = "database"
+        val PREF_TARGET_NAME = "water_target"
+        val PREF_TARGET_SIZE = "1700"
+        val PREF_TARE_SIZE = arrayOf("200", "300", "500")
+        val PREF_TARE_NAME = arrayOf("size_tare_1", "size_tare_2", "size_tare_3")
+        val PREF_FIRSTRUN = "firstrun"
+        val DATE_FORMAT = "dd.MM"
+    }
 
     var waterProgress = 0
     var waterTarget = 0
@@ -59,14 +63,14 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        if (pref.getBoolean("firstrun", true)) { //проверка на первый запуск
-            //установка парапетров по умолчанию в первый раз
+        if (pref.getBoolean(PREF_FIRSTRUN, true)) { //проверка на первый запуск
+            //установка параметров по умолчанию в первый раз
             val ed: Editor = pref.edit()
-            ed.putString(TARGET, "1700").commit()
-            ed.putString(SIZE_TARE_1, "200").commit()
-            ed.putString(SIZE_TARE_2, "300").commit()
-            ed.putString(SIZE_TARE_3, "500").commit()
-            pref.edit().putBoolean("firstrun", false).commit()
+            ed.putString(PREF_TARGET_NAME, PREF_TARGET_SIZE).apply()
+            ed.putString(Companion.PREF_TARE_NAME[0], PREF_TARE_SIZE[0]).commit()
+            ed.putString(Companion.PREF_TARE_NAME[1], PREF_TARE_SIZE[1]).commit()
+            ed.putString(Companion.PREF_TARE_NAME[2], PREF_TARE_SIZE[2]).commit()
+            pref.edit().putBoolean(PREF_FIRSTRUN, false).apply()
         }
         getDataFromDB()
     }
@@ -76,13 +80,12 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-
     private fun getDataFromDB() {
         coroutineIO.launch{
             drinkDays = database.drinkDayDao().getAllDays().toMutableList()
         }
         //если дата другая, создать новый день
-        val today = SimpleDateFormat("dd.MM").format(Date())
+        val today = SimpleDateFormat(DATE_FORMAT).format(Date())
         if (today != drinkDays.last().date) { //если даты разные
             drinkDays.add(DrinkDay())
         }
@@ -98,4 +101,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
