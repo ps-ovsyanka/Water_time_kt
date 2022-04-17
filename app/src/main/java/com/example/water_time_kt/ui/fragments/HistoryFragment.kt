@@ -22,7 +22,7 @@ class HistoryFragment : Fragment() {
     ): View {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
         listHistory = root.findViewById(R.id.list_history) //инициализация списка
-        listHistory.adapter = HistoryAdapter((getActivity() as MainActivity).drinkDays) //присвоение адаптера списку
+        listHistory.adapter = HistoryAdapter(MainActivity.drinkDays) //присвоение адаптера списку
         return root
     }
 }

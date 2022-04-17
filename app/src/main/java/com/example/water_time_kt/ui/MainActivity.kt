@@ -4,21 +4,20 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.AppBarConfiguration.Builder
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.domain.AppDatabase
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.water_time_kt.ui.fragments.HistoryFragment
+import com.example.water_time_kt.ui.fragments.MainFragment
+import com.example.water_time_kt.ui.fragments.SettingsFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,42 +29,42 @@ class MainActivity : AppCompatActivity() {
         val DB_NAME = "database"
         val PREF_TARGET_NAME = "water_target"
         val PREF_TARGET_SIZE = "1700"
-        val PREF_TARE_SIZE = arrayOf("200", "300", "500")
-        val PREF_TARE_NAME = arrayOf("size_tare_1", "size_tare_2", "size_tare_3")
+        val PREF_TARE = arrayOf("size_tare_1" to "200", "size_tare_2" to "300", "size_tare_3" to "500")
         val PREF_FIRSTRUN = "firstrun"
         val DATE_FORMAT = "dd.MM"
-        val MIGRATION_1_2: Migration =  object : Migration(1, 2) {
+        val MIGRATION_1_2 =  object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE drinkDays ADD COLUMN description VARCHAR NOT NULL")
+                database.execSQL("ALTER TABLE drinkDays ADD COLUMN description VARCHAR default '0' NOT NULL")
             }
         }
+        var waterProgress = 0
+        var waterTarget = 0
+        var drinkDays: MutableList<DrinkDay> = mutableListOf()
     }
 
-    var waterProgress = 0
-    var waterTarget = 0
-    lateinit var drinkDays: MutableList<DrinkDay>
-
-    val pref: SharedPreferences = getPreferences(android.content.Context.MODE_PRIVATE)
+    val pref: SharedPreferences by lazy {
+        getPreferences(android.content.Context.MODE_PRIVATE)
+    }
 
     private val coroutineIO = CoroutineScope(Dispatchers.IO)
 
-    val database = Room.databaseBuilder(
-        applicationContext,
-        AppDatabase::class.java, DB_NAME
-    ).addMigrations(MIGRATION_1_2).build()
+    val database by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, DB_NAME
+        ).addMigrations(MIGRATION_1_2).build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val navView = findViewById<BottomNavigationView>(R.id.nav_view)
-
-        val appBarConfiguration: AppBarConfiguration =
-            Builder(R.id.navigation_history, R.id.navigation_main, R.id.navigation_setting).build()
-
-        val navController = findNavController(this, R.id.nav_host_fragment)
-        setupActionBarWithNavController(this, navController, appBarConfiguration)
-        setupWithNavController(navView, navController)
+        val toMainFragment: ImageButton = findViewById(R.id.main_fragment_btn)
+        toMainFragment.setOnClickListener { toMainFragment() }
+        val toHistoryFragment: ImageButton = findViewById(R.id.history_fragment_btn)
+        toHistoryFragment.setOnClickListener { toHistoryFragment() }
+        val toSettingsFragment: ImageButton = findViewById(R.id.settings_fragment_btn)
+        toSettingsFragment.setOnClickListener { toSettingsFragment() }
 
         supportActionBar!!.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -74,12 +73,14 @@ class MainActivity : AppCompatActivity() {
             //установка параметров по умолчанию в первый раз
             val ed: Editor = pref.edit()
             ed.putString(PREF_TARGET_NAME, PREF_TARGET_SIZE).apply()
-            ed.putString(Companion.PREF_TARE_NAME[0], PREF_TARE_SIZE[0]).commit()
-            ed.putString(Companion.PREF_TARE_NAME[1], PREF_TARE_SIZE[1]).commit()
-            ed.putString(Companion.PREF_TARE_NAME[2], PREF_TARE_SIZE[2]).commit()
+            ed.putString(PREF_TARE[0].first, PREF_TARE[0].second).commit()
+            ed.putString(PREF_TARE[1].first, PREF_TARE[1].second).commit()
+            ed.putString(PREF_TARE[2].first, PREF_TARE[2].second).commit()
             pref.edit().putBoolean(PREF_FIRSTRUN, false).apply()
         }
+
         getDataFromDB()
+        toMainFragment()
     }
 
     override fun onStop() {
@@ -87,13 +88,25 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
+    fun toMainFragment(){
+        supportFragmentManager.beginTransaction().replace(R.id.container, MainFragment()).commit()
+    }
+
+    fun toHistoryFragment(){
+        supportFragmentManager.beginTransaction().replace(R.id.container, HistoryFragment()).commit()
+    }
+
+    fun toSettingsFragment(){
+        supportFragmentManager.beginTransaction().replace(R.id.container, SettingsFragment()).commit()
+    }
+
     private fun getDataFromDB() {
         coroutineIO.launch{
             drinkDays = database.drinkDayDao().getAllDays().toMutableList()
         }
-        //если дата другая, создать новый день
         val today = SimpleDateFormat(DATE_FORMAT).format(Date())
-        if (today != drinkDays.last().date) { //если даты разные
+
+        if (drinkDays.isNullOrEmpty() || today != drinkDays.last().date) { //если даты разные
             drinkDays.add(DrinkDay())
         }
         waterProgress = drinkDays.last().dayResult
@@ -108,6 +121,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
 }

@@ -1,22 +1,23 @@
 package com.example.water_time_kt.data
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
-import androidx.room.TypeConverters
+import androidx.room.*
 import com.example.water_time_kt.domain.DrinkItemsTypeConverters
 import com.example.water_time_kt.ui.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
-
+@TypeConverters(DrinkItemsTypeConverters::class)
 @Entity(tableName = "DrinkDays")
 class DrinkDay(@PrimaryKey(autoGenerate = true)
                val id : Long = 0,
                var dayResult : Int = 0,
                var completed : Boolean = false,
+               var date: String = "",
                var description: String = "" ) {
-    val date = SimpleDateFormat(MainActivity.DATE_FORMAT).format(Date())
+    init {
+        date = SimpleDateFormat(MainActivity.DATE_FORMAT).format(Date())
+    }
 
-    @TypeConverters(DrinkItemsTypeConverters::class)
-    var drinkItems: MutableList<Int> = ArrayList() //список приемов воды
+    @field:TypeConverters(DrinkItemsTypeConverters::class)
+    var drinkItems: List<Int> = listOf() //список приемов воды
 }
+

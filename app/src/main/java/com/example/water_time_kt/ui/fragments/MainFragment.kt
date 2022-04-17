@@ -17,10 +17,11 @@ import kotlinx.coroutines.launch
 import java.lang.String
 
 
-class MainFragment : Fragment(), View.OnClickListener {
+class MainFragment (): Fragment(), View.OnClickListener {
 
-    val activity : MainActivity  = getActivity() as MainActivity
-    val drinkDayDao : DrinkDayDao  = (getActivity() as MainActivity).database.drinkDayDao()
+    val drinkDayDao : DrinkDayDao by lazy {
+        (getActivity() as MainActivity).database.drinkDayDao()
+    }
     lateinit var drinkItems : MutableList<Int>
 
     private lateinit var waterProgressText : TextView
@@ -53,22 +54,18 @@ class MainFragment : Fragment(), View.OnClickListener {
             btnCancel = findViewById(R.id.btn_cancel)
         }
 
-        val coroutineIO = CoroutineScope(Dispatchers.IO)
-        coroutineIO.launch{
-            drinkItems = drinkDayDao.getLastDay().drinkItems.toMutableList()
-        }
-
+        drinkItems = MainActivity.drinkDays.last().drinkItems.toMutableList()
     }
 
 
     private fun updateProgress (value: Int){
-        activity.waterProgress +=  value//изменение основной переменной прогресса
+        MainActivity.waterProgress +=  value//изменение основной переменной прогресса
 
-        waterProgressText.setText(String.valueOf(activity.waterProgress))
-        waterProgressBar.progress = activity.waterProgress
-        activity.drinkDays.last().dayResult = activity.waterProgress
+        waterProgressText.setText(String.valueOf(MainActivity.waterProgress))
+        waterProgressBar.progress = MainActivity.waterProgress
+        MainActivity.drinkDays.last().dayResult = MainActivity.waterProgress
         //если цель достигнута то день выполнен
-        activity.drinkDays.last().completed = activity.drinkDays.last().dayResult >= activity.waterTarget
+        MainActivity.drinkDays.last().completed = MainActivity.drinkDays.last().dayResult >= MainActivity.waterTarget
     }
 
     override fun onClick(view: View?) {
@@ -84,5 +81,6 @@ class MainFragment : Fragment(), View.OnClickListener {
                 drinkItems.add(volumValue)
             }
         }
+
     }
 }

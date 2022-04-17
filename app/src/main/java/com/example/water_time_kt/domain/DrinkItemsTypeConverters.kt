@@ -7,12 +7,12 @@ import java.util.stream.Collectors
 
 class DrinkItemsTypeConverters {
     @TypeConverter
-    fun fromHobbies(drinkItems: List<Int>): String? {
+    fun fromDrinkItems(drinkItems: List<Int>): String? {
         return drinkItems.joinToString()
     }
 
     @TypeConverter
-    fun toHobbies(data: String): List<String>? {
-        return Arrays.asList(*data.split(",").toTypedArray())
+    fun toDrinkItems(data: String): List<Int>? {
+        return Arrays.asList(*data.split(",").toTypedArray()).map { s -> s.toInt() }
     }
 }

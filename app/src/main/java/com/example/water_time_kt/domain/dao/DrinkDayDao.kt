@@ -2,6 +2,7 @@ package com.example.water_time_kt.domain.dao
 
 import androidx.room.*
 import com.example.water_time_kt.data.DrinkDay
+import com.example.water_time_kt.domain.DrinkItemsTypeConverters
 
 @Dao
 interface DrinkDayDao {
@@ -20,6 +21,4 @@ interface DrinkDayDao {
     @Query("select * from DrinkDays")
     suspend fun getAllDays() : List<DrinkDay>
 
-    @Query("select * from DrinkDays where id = max(id)")
-    suspend fun getLastDay() : DrinkDay
 }
