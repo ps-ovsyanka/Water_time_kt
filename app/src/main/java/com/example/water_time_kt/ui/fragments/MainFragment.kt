@@ -54,7 +54,7 @@ class MainFragment (): Fragment(), View.OnClickListener {
             btnCancel = findViewById(R.id.btn_cancel)
         }
 
-        drinkItems = MainActivity.drinkDays.last().drinkItems.toMutableList()
+        drinkItems = MainActivity.drinkDays.lastOrNull()?.drinkItems?.toMutableList()?: mutableListOf()
     }
 
 

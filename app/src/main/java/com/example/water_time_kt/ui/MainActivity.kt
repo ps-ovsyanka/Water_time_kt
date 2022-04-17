@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val DATE_FORMAT = "dd.MM"
         val MIGRATION_1_2 =  object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE drinkDays ADD COLUMN description VARCHAR default '0' NOT NULL")
+                database.execSQL("ALTER TABLE drinkDays ADD COLUMN description TEXT default '0' NOT NULL")
             }
         }
         var waterProgress = 0

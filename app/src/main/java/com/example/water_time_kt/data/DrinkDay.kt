@@ -8,7 +8,7 @@ import java.util.*
 @TypeConverters(DrinkItemsTypeConverters::class)
 @Entity(tableName = "DrinkDays")
 class DrinkDay(@PrimaryKey(autoGenerate = true)
-               val id : Long = 0,
+               var id : Long = 0,
                var dayResult : Int = 0,
                var completed : Boolean = false,
                var date: String = "",
