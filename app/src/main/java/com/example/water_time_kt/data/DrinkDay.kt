@@ -12,7 +12,8 @@ class DrinkDay(@PrimaryKey(autoGenerate = true)
                var dayResult : Int = 0,
                var completed : Boolean = false,
                var date: String = "",
-               var description: String = "" ) {
+               var description: String = "",
+                var number: Int = 0) {
     init {
         date = SimpleDateFormat(MainActivity.DATE_FORMAT).format(Date())
     }

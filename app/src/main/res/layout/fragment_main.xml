@@ -15,7 +15,7 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="297dp"
             android:layout_height="16dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="80dp"
             android:indeterminate="false"
             android:max="1750"
             android:progress="0"

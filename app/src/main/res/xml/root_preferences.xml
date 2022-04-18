@@ -6,8 +6,9 @@
         app:title="Основные настройки">
 
         <EditTextPreference
+            android:key="water_target"
             app:iconSpaceReserved="false"
-            app:key="water_target"
+
             app:title="@string/myTarget"
             app:useSimpleSummaryProvider="true" />
 
@@ -17,25 +18,25 @@
         android:title="@string/containers">
 
         <EditTextPreference
-            android:defaultValue="200"
+            app:key="size_tare_1"
             android:key="size_tare_1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            app:iconSpaceReserved = "false"
-            android:defaultValue="300"
+            app:key="size_tare_2"
             android:key="size_tare_2"
             android:selectAllOnFocus="true"
             android:singleLine="true"
+            app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
         <EditTextPreference
-            app:iconSpaceReserved = "false"
-            android:defaultValue="500"
+            app:key="size_tare_3"
             android:key="size_tare_3"
             android:selectAllOnFocus="true"
             android:singleLine="true"
+            app:iconSpaceReserved="false"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

@@ -6,6 +6,8 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         val DB_NAME = "database"
         val PREF_TARGET_NAME = "water_target"
         val PREF_TARGET_SIZE = "1700"
-        val PREF_TARE = arrayOf("size_tare_1" to "200", "size_tare_2" to "300", "size_tare_3" to "500")
+        val PREF_TARE = arrayOf("size_tare_1" to "202", "size_tare_2" to "300", "size_tare_3" to "500")
         val PREF_FIRSTRUN = "firstrun"
         val DATE_FORMAT = "dd.MM"
         val MIGRATION_1_2 =  object : Migration(1, 2) {
@@ -37,14 +39,18 @@ class MainActivity : AppCompatActivity() {
                 database.execSQL("ALTER TABLE drinkDays ADD COLUMN description TEXT default '0' NOT NULL")
             }
         }
+        val MIGRATION_2_3 =  object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE drinkDays ADD COLUMN number INT default 0 NOT NULL")
+            }
+        }
         var waterProgress = 0
         var waterTarget = 0
         var drinkDays: MutableList<DrinkDay> = mutableListOf()
+        lateinit var pref: SharedPreferences
     }
 
-    val pref: SharedPreferences by lazy {
-        getPreferences(android.content.Context.MODE_PRIVATE)
-    }
+
 
     private val coroutineIO = CoroutineScope(Dispatchers.IO)
 
@@ -52,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, DB_NAME
-        ).addMigrations(MIGRATION_1_2).build()
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +74,8 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar!!.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        pref = PreferenceManager.getDefaultSharedPreferences(this)
 
         if (pref.getBoolean(PREF_FIRSTRUN, true)) { //проверка на первый запуск
             //установка параметров по умолчанию в первый раз
@@ -103,23 +111,23 @@ class MainActivity : AppCompatActivity() {
     private fun getDataFromDB() {
         coroutineIO.launch{
             drinkDays = database.drinkDayDao().getAllDays().toMutableList()
-        }
-        val today = SimpleDateFormat(DATE_FORMAT).format(Date())
+            val today = SimpleDateFormat(DATE_FORMAT).format(Date())
 
-        if (drinkDays.isNullOrEmpty() || today != drinkDays.last().date) { //если даты разные
-            drinkDays.add(DrinkDay())
+            if (drinkDays.isNullOrEmpty() || today != drinkDays.last().date) { //если даты разные
+                drinkDays.add(DrinkDay())
+            }
+            waterProgress = drinkDays.last().dayResult
         }
-        waterProgress = drinkDays.last().dayResult
+
     }
 
     private fun updateDB() {
         coroutineIO.launch {
             if (database.drinkDayDao().getAllDays().size < drinkDays.size) { //если добавился новый день
                 database.drinkDayDao().insert(drinkDays.last())
-            } else { //если нужно обновить старый
+            } else {
                 database.drinkDayDao().update(drinkDays.last())
             }
         }
     }
-
 }
