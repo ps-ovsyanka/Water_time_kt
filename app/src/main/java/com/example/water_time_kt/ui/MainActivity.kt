@@ -6,20 +6,17 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.domain.AppDatabase
+import com.example.water_time_kt.domain.migration.*
 import com.example.water_time_kt.ui.fragments.HistoryFragment
 import com.example.water_time_kt.ui.fragments.MainFragment
 import com.example.water_time_kt.ui.fragments.SettingsFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,16 +31,6 @@ class MainActivity : AppCompatActivity() {
         val PREF_TARE = arrayOf("size_tare_1" to "202", "size_tare_2" to "300", "size_tare_3" to "500")
         val PREF_FIRSTRUN = "firstrun"
         val DATE_FORMAT = "dd.MM"
-        val MIGRATION_1_2 =  object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE drinkDays ADD COLUMN description TEXT default '0' NOT NULL")
-            }
-        }
-        val MIGRATION_2_3 =  object : Migration(2, 3) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE drinkDays ADD COLUMN number INT default 0 NOT NULL")
-            }
-        }
         var waterProgress = 0
         var waterTarget = 0
         var drinkDays: MutableList<DrinkDay> = mutableListOf()
