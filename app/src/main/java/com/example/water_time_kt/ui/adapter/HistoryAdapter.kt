@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
+import kotlinx.android.synthetic.main.list_history_item.view.*
 
 class HistoryAdapter(
     private val values: MutableList<DrinkDay>
@@ -21,8 +22,8 @@ class HistoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.time.text = item.date
         holder.volume.text = item.dayResult.toString()
+        holder.time.text = item.date
         holder.checkBox.setChecked(item.completed)
     }
 
@@ -30,9 +31,9 @@ class HistoryAdapter(
 
     inner class ViewHolder(view: View) :
         RecyclerView.ViewHolder(view) {
-        val volume: TextView = view.findViewById<View>(R.id.history_item_volume) as TextView
-        val time: TextView = view.findViewById<View>(R.id.history_item_time) as TextView
-        val checkBox: CheckBox = view.findViewById<View>(R.id.checkBox) as CheckBox
+        val volume: TextView = view.history_item_volume
+        val time: TextView = view.history_item_time
+        val checkBox: CheckBox = view.checkBox
     }
 
 }

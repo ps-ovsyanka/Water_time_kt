@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.water_time_kt.R
 import com.example.water_time_kt.ui.MainActivity
 import com.example.water_time_kt.ui.adapter.HistoryAdapter
+import kotlinx.android.synthetic.main.fragment_history.view.*
 
 /**
  * A fragment representing a list of Items.
@@ -21,7 +22,7 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val root = inflater.inflate(R.layout.fragment_history, container, false)
-        listHistory = root.findViewById(R.id.list_history) //инициализация списка
+        listHistory = root.list_history
         listHistory.adapter = HistoryAdapter(MainActivity.drinkDays) //присвоение адаптера списку
         return root
     }

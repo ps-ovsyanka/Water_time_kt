@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import androidx.room.Room
@@ -15,6 +14,7 @@ import com.example.water_time_kt.domain.migration.*
 import com.example.water_time_kt.ui.fragments.HistoryFragment
 import com.example.water_time_kt.ui.fragments.MainFragment
 import com.example.water_time_kt.ui.fragments.SettingsFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,12 +32,9 @@ class MainActivity : AppCompatActivity() {
         val PREF_FIRSTRUN = "firstrun"
         val DATE_FORMAT = "dd.MM"
         var waterProgress = 0
-        var waterTarget = 0
         var drinkDays: MutableList<DrinkDay> = mutableListOf()
         lateinit var pref: SharedPreferences
     }
-
-
 
     private val coroutineIO = CoroutineScope(Dispatchers.IO)
 
@@ -52,12 +49,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toMainFragment: ImageButton = findViewById(R.id.main_fragment_btn)
-        toMainFragment.setOnClickListener { toMainFragment() }
-        val toHistoryFragment: ImageButton = findViewById(R.id.history_fragment_btn)
-        toHistoryFragment.setOnClickListener { toHistoryFragment() }
-        val toSettingsFragment: ImageButton = findViewById(R.id.settings_fragment_btn)
-        toSettingsFragment.setOnClickListener { toSettingsFragment() }
+        main_fragment_btn.setOnClickListener { toMainFragment() }
+        history_fragment_btn.setOnClickListener { toHistoryFragment() }
+        settings_fragment_btn.setOnClickListener { toSettingsFragment() }
 
         supportActionBar!!.hide()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -68,12 +62,11 @@ class MainActivity : AppCompatActivity() {
             //установка параметров по умолчанию в первый раз
             val ed: Editor = pref.edit()
             ed.putString(PREF_TARGET_NAME, PREF_TARGET_SIZE).apply()
-            ed.putString(PREF_TARE[0].first, PREF_TARE[0].second).commit()
-            ed.putString(PREF_TARE[1].first, PREF_TARE[1].second).commit()
-            ed.putString(PREF_TARE[2].first, PREF_TARE[2].second).commit()
             pref.edit().putBoolean(PREF_FIRSTRUN, false).apply()
+            PREF_TARE.forEach {
+                ed.putString(it.first, it.second).apply()
+            }
         }
-
         getDataFromDB()
         toMainFragment()
     }
@@ -101,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             val today = SimpleDateFormat(DATE_FORMAT).format(Date())
 
             if (drinkDays.isNullOrEmpty() || today != drinkDays.last().date) { //если даты разные
-                drinkDays.add(DrinkDay())
+                drinkDays.add(DrinkDay(date = today))
             }
             waterProgress = drinkDays.last().dayResult
         }

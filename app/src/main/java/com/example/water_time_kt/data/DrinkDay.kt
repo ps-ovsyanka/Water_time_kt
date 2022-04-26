@@ -14,9 +14,6 @@ class DrinkDay(@PrimaryKey(autoGenerate = true)
                var date: String = "",
                var description: String = "",
                 var number: Int = 0) {
-    init {
-        date = SimpleDateFormat(MainActivity.DATE_FORMAT).format(Date())
-    }
 
     @field:TypeConverters(DrinkItemsTypeConverters::class)
     var drinkItems: List<Int> = listOf() //список приемов воды
