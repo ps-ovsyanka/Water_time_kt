@@ -1,7 +1,6 @@
 package com.example.water_time_kt.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import com.example.water_time_kt.ui.MainActivity.Companion.drinkDays
 import com.example.water_time_kt.ui.MainActivity.Companion.pref
 import com.example.water_time_kt.ui.MainActivity.Companion.waterProgress
 import kotlinx.android.synthetic.main.fragment_main.*
-import java.lang.String
 
 
 class MainFragment (): Fragment() {
@@ -70,7 +68,7 @@ class MainFragment (): Fragment() {
 
     private fun updateProgress (value: Int){
         waterProgress +=  value//изменение основной переменной прогресса
-        text_water_progress.setText(String.valueOf(waterProgress))
+        text_water_progress.text = waterProgress.toString()
         water_progress_bar.progress = waterProgress
         drinkDays.lastOrNull()?.dayResult = waterProgress
         //если цель достигнута то день выполнен
