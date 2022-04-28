@@ -1,7 +1,6 @@
 package com.example.water_time_kt.ui
 
 import android.content.SharedPreferences
-import android.content.SharedPreferences.Editor
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +22,6 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     companion object {
-
         const val PREF_FIRSTRUN = "firstrun"
         const val DATE_FORMAT = "dd.MM"
         const val PREF_TARGET_NAME = "water_target"
@@ -31,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val PREF_TARE = arrayOf("size_tare_1" to "202", "size_tare_2" to "300", "size_tare_3" to "500")
         var waterProgress = 0
         var drinkDays: MutableList<DrinkDay> = mutableListOf()
-        var pref: SharedPreferences = Application.injector.getSharedPreferences()
+        var pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
         val drinkDayDao: DrinkDayDao = Application.injector.getDependenciesDrinkDayDao()
     }
 

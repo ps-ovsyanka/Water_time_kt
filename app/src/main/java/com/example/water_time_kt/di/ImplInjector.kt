@@ -1,8 +1,8 @@
 package com.example.water_time_kt.di
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.water_time_kt.di.dependencies.DependenciesAppDatabase
@@ -25,7 +25,7 @@ class ImplInjector(builder : Builder): Injector {
         builder.getDependenciesDrinkDayDao() ?: throw InjectorException()
 
 
-    override fun getSharedPreferences(): SharedPreferences =
+    override fun getDependenciesSharedPreferences(): SharedPreferences =
         dependencySharedPreferences.sharedPreferences
 
     override fun getDependenciesApiDatabase(): RoomDatabase =
@@ -37,6 +37,7 @@ class ImplInjector(builder : Builder): Injector {
     class Builder{
 
         companion object{
+            const val PREF_FILE_NAME = "shared_pref"
             const val DB_NAME = "database"
         }
 
@@ -46,7 +47,7 @@ class ImplInjector(builder : Builder): Injector {
 
         fun dependencySharedPreferences(context: Context) : Builder = this.apply {
             dependencySharePreferences = DependencySharedPreferences(
-                PreferenceManager.getDefaultSharedPreferences(context)
+                context.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE)
             )
         }
         fun dependencySharedPreferences(sharedPreferences: SharedPreferences) : Builder = this.apply {
