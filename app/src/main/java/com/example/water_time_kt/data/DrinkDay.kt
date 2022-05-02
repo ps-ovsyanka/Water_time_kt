@@ -2,9 +2,7 @@ package com.example.water_time_kt.data
 
 import androidx.room.*
 import com.example.water_time_kt.domain.DrinkItemsTypeConverters
-import com.example.water_time_kt.ui.MainActivity
-import java.text.SimpleDateFormat
-import java.util.*
+
 @TypeConverters(DrinkItemsTypeConverters::class)
 @Entity(tableName = "DrinkDays")
 class DrinkDay(@PrimaryKey(autoGenerate = true)

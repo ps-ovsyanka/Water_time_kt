@@ -10,10 +10,10 @@ import com.example.water_time_kt.di.dependencies.DependenciesDrinkDayDao
 import com.example.water_time_kt.domain.AppDatabase
 import com.example.water_time_kt.domain.dao.DrinkDayDao
 import com.example.water_time_kt.di.dependencies.DependencySharedPreferences
+import com.example.water_time_kt.di.dependencies.dependenciesPresenter.*
 import java.lang.Exception
 
 class ImplInjector(builder : Builder): Injector {
-
 
     private val dependencySharedPreferences : DependencySharedPreferences =
         builder.getDependencySharePreferences() ?: throw InjectorException()
@@ -24,6 +24,16 @@ class ImplInjector(builder : Builder): Injector {
     private val dependenciesDrinkDayDao : DependenciesDrinkDayDao =
         builder.getDependenciesDrinkDayDao() ?: throw InjectorException()
 
+    private val dependenciesPresenter: DependenciesPresenter by lazy {
+        DependenciesPresenter(
+            DependenciesMainActivityPresenter(dependenciesDrinkDayDao.drinkDayDao),
+            DependenciesMainFragmentPresenter(),
+            DependenciesSettingsFragmentPresenter(),
+            DependenciesHistoryFragmentPresenter()
+        )
+    }
+
+    override fun getIDependenciesPresenter(): IDependenciesPresenter = dependenciesPresenter
 
     override fun getDependenciesSharedPreferences(): SharedPreferences =
         dependencySharedPreferences.sharedPreferences
@@ -34,15 +44,17 @@ class ImplInjector(builder : Builder): Injector {
     override fun getDependenciesDrinkDayDao(): DrinkDayDao =
         dependenciesDrinkDayDao.drinkDayDao
 
+
+
     class Builder{
 
         companion object{
             const val PREF_FILE_NAME = "shared_pref"
             const val DB_NAME = "database"
         }
-
         private var dependencySharePreferences : DependencySharedPreferences? = null
         private var dependenciesAppDatabase: DependenciesAppDatabase? = null
+
         private var dependenciesDrinkDayDao: DependenciesDrinkDayDao? = null
 
         fun dependencySharedPreferences(context: Context) : Builder = this.apply {
@@ -50,13 +62,14 @@ class ImplInjector(builder : Builder): Injector {
                 context.getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE)
             )
         }
+
         fun dependencySharedPreferences(sharedPreferences: SharedPreferences) : Builder = this.apply {
             dependencySharePreferences = DependencySharedPreferences(sharedPreferences)
         }
-
         fun dependenciesApiDatabase(database: AppDatabase): Builder = this.apply {
             dependenciesAppDatabase = DependenciesAppDatabase(database)
         }
+
         fun dependenciesApiDatabase(context: Context): Builder = this.apply {
             dependenciesAppDatabase = DependenciesAppDatabase(
                 Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME).build()
@@ -75,11 +88,10 @@ class ImplInjector(builder : Builder): Injector {
         fun getDependenciesApiDatabase() = dependenciesAppDatabase
 
         fun getDependenciesDrinkDayDao() = dependenciesDrinkDayDao
-
         fun build() : ImplInjector{
             return ImplInjector(this)
         }
     }
 
-    class InjectorException() : Exception("dependencies has null")
+    class InjectorException()  : Exception("dependencies has null")
 }
