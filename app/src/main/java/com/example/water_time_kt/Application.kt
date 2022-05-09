@@ -15,9 +15,11 @@ class Application: Application() {
         injector =ImplInjector
             .Builder()
             .dependencySharedPreferences(applicationContext)
-            .dependenciesApiDatabase(applicationContext)
-            .dependenciesDrinkDayDao()
+            .dependencyApiDatabase(applicationContext)
+            .dependencyDrinkDayDao()
             .build()
     }
+
+
 
 }

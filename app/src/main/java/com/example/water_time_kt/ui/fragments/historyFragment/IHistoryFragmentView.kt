@@ -1,7 +1,7 @@
 package com.example.water_time_kt.ui.fragments.historyFragment
 
-import com.example.water_time_kt.ui.adapter.HistoryAdapter
+import com.example.water_time_kt.data.DrinkDay
 
 interface IHistoryFragmentView {
-    fun setHistoryListAdapter(adapter: HistoryAdapter)
+    fun updateHistory(list: List<DrinkDay>)
 }

@@ -18,31 +18,31 @@ class ImplInjector(builder : Builder): Injector {
     private val dependencySharedPreferences : DependencySharedPreferences =
         builder.getDependencySharePreferences() ?: throw InjectorException()
 
-    private val dependenciesAppDatabase : DependenciesAppDatabase =
-        builder.getDependenciesApiDatabase() ?: throw InjectorException()
+    private val dependencyAppDatabase : DependenciesAppDatabase =
+        builder.getDependencyApiDatabase() ?: throw InjectorException()
 
-    private val dependenciesDrinkDayDao : DependenciesDrinkDayDao =
-        builder.getDependenciesDrinkDayDao() ?: throw InjectorException()
+    private val dependencyDrinkDayDao : DependenciesDrinkDayDao =
+        builder.getDependencyDrinkDayDao() ?: throw InjectorException()
 
-    private val dependenciesPresenter: DependenciesPresenter by lazy {
+    private val dependencyPresenter: DependenciesPresenter by lazy {
         DependenciesPresenter(
-            DependenciesMainActivityPresenter(dependenciesDrinkDayDao.drinkDayDao),
-            DependenciesMainFragmentPresenter(),
+            DependenciesMainActivityPresenter(dependencyDrinkDayDao.drinkDayDao),
+            DependenciesMainFragmentPresenter(dependencyDrinkDayDao.drinkDayDao),
             DependenciesSettingsFragmentPresenter(),
-            DependenciesHistoryFragmentPresenter()
+            DependenciesHistoryFragmentPresenter(dependencyDrinkDayDao.drinkDayDao)
         )
     }
 
-    override fun getIDependenciesPresenter(): IDependenciesPresenter = dependenciesPresenter
+    override fun getIDependenciesPresenter(): IDependenciesPresenter = dependencyPresenter
 
     override fun getDependenciesSharedPreferences(): SharedPreferences =
         dependencySharedPreferences.sharedPreferences
 
     override fun getDependenciesApiDatabase(): RoomDatabase =
-        dependenciesAppDatabase.database
+        dependencyAppDatabase.database
 
     override fun getDependenciesDrinkDayDao(): DrinkDayDao =
-        dependenciesDrinkDayDao.drinkDayDao
+        dependencyDrinkDayDao.drinkDayDao
 
 
 
@@ -53,9 +53,9 @@ class ImplInjector(builder : Builder): Injector {
             const val DB_NAME = "database"
         }
         private var dependencySharePreferences : DependencySharedPreferences? = null
-        private var dependenciesAppDatabase: DependenciesAppDatabase? = null
+        private var dependencyAppDatabase: DependenciesAppDatabase? = null
 
-        private var dependenciesDrinkDayDao: DependenciesDrinkDayDao? = null
+        private var dependencyDrinkDayDao: DependenciesDrinkDayDao? = null
 
         fun dependencySharedPreferences(context: Context) : Builder = this.apply {
             dependencySharePreferences = DependencySharedPreferences(
@@ -66,18 +66,18 @@ class ImplInjector(builder : Builder): Injector {
         fun dependencySharedPreferences(sharedPreferences: SharedPreferences) : Builder = this.apply {
             dependencySharePreferences = DependencySharedPreferences(sharedPreferences)
         }
-        fun dependenciesApiDatabase(database: AppDatabase): Builder = this.apply {
-            dependenciesAppDatabase = DependenciesAppDatabase(database)
+        fun dependencyApiDatabase(database: AppDatabase): Builder = this.apply {
+            dependencyAppDatabase = DependenciesAppDatabase(database)
         }
 
-        fun dependenciesApiDatabase(context: Context): Builder = this.apply {
-            dependenciesAppDatabase = DependenciesAppDatabase(
+        fun dependencyApiDatabase(context: Context): Builder = this.apply {
+            dependencyAppDatabase = DependenciesAppDatabase(
                 Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME).build()
             )
         }
 
-        fun dependenciesDrinkDayDao(): Builder = this.apply {
-            dependenciesDrinkDayDao = dependenciesAppDatabase?.database?.let {
+        fun dependencyDrinkDayDao(): Builder = this.apply {
+            dependencyDrinkDayDao = dependencyAppDatabase?.database?.let {
                 DependenciesDrinkDayDao(
                     it.drinkDayDao())
             }
@@ -85,9 +85,9 @@ class ImplInjector(builder : Builder): Injector {
 
         fun getDependencySharePreferences() = dependencySharePreferences
 
-        fun getDependenciesApiDatabase() = dependenciesAppDatabase
+        fun getDependencyApiDatabase() = dependencyAppDatabase
 
-        fun getDependenciesDrinkDayDao() = dependenciesDrinkDayDao
+        fun getDependencyDrinkDayDao() = dependencyDrinkDayDao
         fun build() : ImplInjector{
             return ImplInjector(this)
         }

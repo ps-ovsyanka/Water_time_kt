@@ -6,8 +6,4 @@ interface ISettingsFragmentView {
     fun setEditTextTare2(value: String?)
     fun setEditTextTare3(value: String?)
 
-    fun getTextTarget(): String
-    fun getTextTare1(): String
-    fun getTextTare2(): String
-    fun getTextTare3(): String
 }

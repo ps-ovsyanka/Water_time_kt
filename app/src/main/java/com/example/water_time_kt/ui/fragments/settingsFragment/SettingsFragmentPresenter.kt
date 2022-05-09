@@ -9,18 +9,7 @@ import com.example.water_time_kt.ui.MainActivityPresenter.Companion.PREF_TARGET_
 class SettingsFragmentPresenter {
 
     private lateinit var view: ISettingsFragmentView
-    companion object{
-        val pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
-    }
-
-    fun onPause(){
-        pref.edit().apply {
-            putString(PREF_TARGET_NAME, view.getTextTarget()).apply()
-            putString(PREF_TARE[0].first, view.getTextTare1()).apply()
-            putString(PREF_TARE[1].first, view.getTextTare2()).apply()
-            putString(PREF_TARE[2].first, view.getTextTare3()).apply()
-        }
-    }
+    private val pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
 
     fun onCreate(settingView: SettingsFragment) {
         view = settingView
@@ -28,5 +17,21 @@ class SettingsFragmentPresenter {
         view.setEditTextTare1(pref.getString(PREF_TARE[0].first, PREF_TARE[0].second))
         view.setEditTextTare2(pref.getString(PREF_TARE[1].first, PREF_TARE[1].second))
         view.setEditTextTare3(pref.getString(PREF_TARE[2].first, PREF_TARE[2].second))
+    }
+
+    fun setTargetSize(size: String){
+        pref.edit().putString(PREF_TARGET_NAME, size).apply()
+    }
+
+    fun setTareOneSize(size: String){
+        pref.edit().putString(PREF_TARE[0].first, size).apply()
+    }
+
+    fun setTareTwoSize(size: String){
+        pref.edit().putString(PREF_TARE[1].first, size).apply()
+    }
+
+    fun setTareThreeSize(size: String){
+        pref.edit().putString(PREF_TARE[2].first, size).apply()
     }
 }

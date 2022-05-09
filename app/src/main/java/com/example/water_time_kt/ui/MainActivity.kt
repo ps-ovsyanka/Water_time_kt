@@ -29,11 +29,6 @@ class MainActivity : AppCompatActivity(), IMainActivityView {
         presenter.onCreate(this)
     }
 
-    override fun onPause() {
-        presenter.onPause()
-        super.onPause()
-    }
-
     override fun onDestroy() {
         presenter.onDestroy()
         super.onDestroy()

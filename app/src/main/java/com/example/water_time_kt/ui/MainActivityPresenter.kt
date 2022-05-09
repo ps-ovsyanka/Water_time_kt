@@ -11,21 +11,18 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivityPresenter(private val drinkDayDao: DrinkDayDao) {
+class MainActivityPresenter(val drinkDayDao: DrinkDayDao) {
 
     companion object {
         const val PREF_FIRSTRUN = "firstrun"
         const val DATE_FORMAT = "dd.MM"
         const val PREF_TARGET_NAME = "water_target"
         const val PREF_TARGET_SIZE = "1700"
-        val PREF_TARE = arrayOf("size_tare_1" to "202", "size_tare_2" to "300", "size_tare_3" to "500")
-        var waterProgress = 0
-
-        var drinkDays: MutableList<DrinkDay> = mutableListOf()
-        var pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
+        val PREF_TARE = arrayOf("size_tare_1" to "200", "size_tare_2" to "300", "size_tare_3" to "500")
     }
 
     private lateinit var view: IMainActivityView
+    private var pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
     private val coroutineIO = CoroutineScope(Dispatchers.IO)
 
     fun onCreate(mainView: MainActivity){
@@ -41,33 +38,17 @@ class MainActivityPresenter(private val drinkDayDao: DrinkDayDao) {
         toMainFragment()
     }
 
-    fun onPause(){
-        updateDB()
-    }
-
     fun onDestroy(){
         coroutineIO.cancel()
     }
 
     private fun getDataFromDB() {
         coroutineIO.launch{
-            drinkDays = Application.injector.getDependenciesDrinkDayDao().getAllDays().toMutableList()
+            val drinkDays = drinkDayDao.getAllDays().toMutableList()
             val today = SimpleDateFormat(DATE_FORMAT).format(Date())
 
             if (drinkDays.isNullOrEmpty() || today != drinkDays.last().date) {
-                drinkDays.add(DrinkDay(date = today))
-            }
-            waterProgress = drinkDays.last().dayResult
-        }
-
-    }
-
-    private fun updateDB() {
-        coroutineIO.launch {
-            if (drinkDayDao.getAllDays().size < drinkDays.size) {
-                drinkDayDao.insert(drinkDays.last())
-            } else {
-                drinkDayDao.update(drinkDays.last())
+                drinkDayDao.insert(DrinkDay(date = today))
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.water_time_kt.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,17 @@ import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 import kotlinx.android.synthetic.main.list_history_item.view.*
 
-class HistoryAdapter(
-    private val values: MutableList<DrinkDay>
-) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+
+    private var values: MutableList<DrinkDay> = mutableListOf()
+
+    fun refresh(list: List<DrinkDay>){
+        Log.e("cc",list.toString())
+        values.clear()
+        values.addAll(list)
+        notifyDataSetChanged()
+        Log.e("cc",values.toString())
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -24,7 +33,7 @@ class HistoryAdapter(
         val item = values[position]
         holder.volume.text = item.dayResult.toString()
         holder.time.text = item.date
-        holder.checkBox.setChecked(item.completed)
+        holder.checkBox.isChecked = item.completed
     }
 
     override fun getItemCount(): Int = values.size

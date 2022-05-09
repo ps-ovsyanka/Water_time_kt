@@ -12,17 +12,13 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment(): Fragment(), IMainFragmentView {
 
-    private val presenter : MainFragmentPresenter
-
-    init {
-        presenter = Application.injector.getIDependenciesPresenter().getMainFragmentPresenter()
-    }
+    private val presenter : MainFragmentPresenter =
+        Application.injector.getIDependenciesPresenter().getMainFragmentPresenter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
@@ -50,6 +46,10 @@ class MainFragment(): Fragment(), IMainFragmentView {
         presenter.onResume()
     }
 
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
+    }
     override fun setTextTarget(value: String?) {
         water_target.text = value
     }
@@ -61,7 +61,6 @@ class MainFragment(): Fragment(), IMainFragmentView {
     override fun setProgress(progress: Int) {
         water_progress_bar.progress = progress
     }
-
 
     override fun setTextTare1(value: String?){
         tare_1.text = value
