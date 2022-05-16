@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivityPresenter(val drinkDayDao: DrinkDayDao) {
+class MainActivityPresenter(private val drinkDayDao: DrinkDayDao, private var pref: SharedPreferences ) {
 
     companion object {
         const val PREF_FIRSTRUN = "firstrun"
@@ -22,7 +22,6 @@ class MainActivityPresenter(val drinkDayDao: DrinkDayDao) {
     }
 
     private lateinit var view: IMainActivityView
-    private var pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
     private val coroutineIO = CoroutineScope(Dispatchers.IO)
 
     fun onCreate(mainView: MainActivity){

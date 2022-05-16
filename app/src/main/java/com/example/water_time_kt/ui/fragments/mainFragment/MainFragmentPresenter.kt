@@ -1,7 +1,6 @@
 package com.example.water_time_kt.ui.fragments.mainFragment
 
 import android.content.SharedPreferences
-import com.example.water_time_kt.Application
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.domain.dao.DrinkDayDao
 import com.example.water_time_kt.ui.MainActivityPresenter.Companion.PREF_TARE
@@ -11,14 +10,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainFragmentPresenter(val drinkDayDao: DrinkDayDao) {
+class MainFragmentPresenter @Inject constructor(
+    private val drinkDayDao: DrinkDayDao,
+    private val pref: SharedPreferences
+    ) {
 
     private var today: DrinkDay = DrinkDay()
     private var drinkItems: MutableList<Int> = mutableListOf()
     private lateinit var view: IMainFragmentView
-    private val pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
-    private val coroutineIO = CoroutineScope(Dispatchers.IO)
+    private val coroutine = CoroutineScope(Dispatchers.Main)
 
     fun onCreate(view: IMainFragmentView){
         this.view = view
@@ -26,13 +28,13 @@ class MainFragmentPresenter(val drinkDayDao: DrinkDayDao) {
     }
 
     fun onResume(){
-        coroutineIO.launch {
+        coroutine.launch {
             today = drinkDayDao.getAllDays().toMutableList().last()
             drinkItems = today.drinkItems.toMutableList()
+            view.setTextProgress(today.dayResult.toString())
+            view.setTextTarget(pref.getString(PREF_TARGET_NAME, PREF_TARGET_SIZE))
+            view.setProgress(today.dayResult)
         }
-        view.setTextProgress(today.dayResult.toString())
-        view.setTextTarget(pref.getString(PREF_TARGET_NAME, PREF_TARGET_SIZE))
-        view.setProgress(today.dayResult)
         view.apply {
             setTextTare1(pref.getString(PREF_TARE[0].first, PREF_TARE[0].second))
             setTextTare2(pref.getString(PREF_TARE[1].first, PREF_TARE[1].second))
@@ -41,7 +43,7 @@ class MainFragmentPresenter(val drinkDayDao: DrinkDayDao) {
     }
 
     fun onDestroy(){
-        coroutineIO.cancel()
+        coroutine.cancel()
     }
 
     private fun updateProgress (value: Int){
@@ -52,7 +54,7 @@ class MainFragmentPresenter(val drinkDayDao: DrinkDayDao) {
         }
         today.completed = today.dayResult >= pref.getString(PREF_TARGET_NAME, PREF_TARGET_SIZE)!!.toInt()
         today.drinkItems = drinkItems
-        coroutineIO.launch {
+        coroutine.launch {
             drinkDayDao.update(today)
         }
     }

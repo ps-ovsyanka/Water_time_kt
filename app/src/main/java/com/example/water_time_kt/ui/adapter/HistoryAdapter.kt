@@ -16,11 +16,10 @@ class HistoryAdapter: RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
     private var values: MutableList<DrinkDay> = mutableListOf()
 
     fun refresh(list: List<DrinkDay>){
-        Log.e("cc",list.toString())
         values.clear()
         values.addAll(list)
         notifyDataSetChanged()
-        Log.e("cc",values.toString())
+        Log.e("cc","list changed")
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -11,11 +11,16 @@ import com.example.water_time_kt.R
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.ui.adapter.HistoryAdapter
 import kotlinx.android.synthetic.main.fragment_history.*
+import javax.inject.Inject
 
 class HistoryFragment : Fragment(), IHistoryFragmentView {
 
-    private val presenter: HistoryFragmentPresenter =
-        Application.injector.getIDependenciesPresenter().getHistoryFragmentPresenter()
+    init {
+        Application.appComponent.inject(this)
+    }
+
+    @Inject
+    lateinit var presenter: HistoryFragmentPresenter
     private val adapter: HistoryAdapter = HistoryAdapter()
 
     override fun onCreateView(

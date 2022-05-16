@@ -5,11 +5,11 @@ import com.example.water_time_kt.Application
 import com.example.water_time_kt.ui.MainActivityPresenter.Companion.PREF_TARE
 import com.example.water_time_kt.ui.MainActivityPresenter.Companion.PREF_TARGET_NAME
 import com.example.water_time_kt.ui.MainActivityPresenter.Companion.PREF_TARGET_SIZE
+import javax.inject.Inject
 
-class SettingsFragmentPresenter {
+class SettingsFragmentPresenter @Inject constructor(private val pref: SharedPreferences) {
 
     private lateinit var view: ISettingsFragmentView
-    private val pref: SharedPreferences = Application.injector.getDependenciesSharedPreferences()
 
     fun onCreate(settingView: SettingsFragment) {
         view = settingView

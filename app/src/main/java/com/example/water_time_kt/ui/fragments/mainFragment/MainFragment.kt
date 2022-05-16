@@ -8,12 +8,16 @@ import androidx.fragment.app.Fragment
 import com.example.water_time_kt.Application
 import com.example.water_time_kt.R
 import kotlinx.android.synthetic.main.fragment_main.*
+import javax.inject.Inject
 
 
 class MainFragment(): Fragment(), IMainFragmentView {
+    init {
+        Application.appComponent.inject(this)
+    }
 
-    private val presenter : MainFragmentPresenter =
-        Application.injector.getIDependenciesPresenter().getMainFragmentPresenter()
+    @Inject
+    lateinit var presenter : MainFragmentPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -3,27 +3,26 @@ package com.example.water_time_kt.ui.fragments.historyFragment
 import android.util.Log
 import com.example.water_time_kt.domain.dao.DrinkDayDao
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class HistoryFragmentPresenter(val drinkDayDao: DrinkDayDao) {
+class HistoryFragmentPresenter @Inject constructor(private val drinkDayDao: DrinkDayDao) {
 
     private lateinit var view: IHistoryFragmentView
+    val coroutine = CoroutineScope(Dispatchers.Main)
 
     fun onCreate(historyFragment: IHistoryFragmentView){
         view = historyFragment
         updateHistory()
-        Log.e("ee", "historyFragment onCreate")
     }
 
     fun updateHistory(){
-        val coroutineIO = CoroutineScope(Dispatchers.IO)
-        coroutineIO.launch {
-            Log.e("ee", "history update")
+        coroutine.launch {
             view.updateHistory(drinkDayDao.getAllDays())
-            cancel()
+            Log.e("cc","list view")
         }
     }
 
     fun onDestroy(){
-        Log.e("ee", "historyFragment onDestroy")
+        coroutine.cancel()
     }
 }

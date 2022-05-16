@@ -10,11 +10,15 @@ import androidx.fragment.app.Fragment
 import com.example.water_time_kt.Application
 import com.example.water_time_kt.R
 import kotlinx.android.synthetic.main.fragment_settings.*
+import javax.inject.Inject
 
 class SettingsFragment : Fragment(), ISettingsFragmentView {
+    init {
+        Application.appComponent.inject(this)
+    }
 
-    private val presenter : SettingsFragmentPresenter =
-        Application.injector.getIDependenciesPresenter().getSettingsFragmentPresenter()
+    @Inject
+    lateinit var presenter : SettingsFragmentPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

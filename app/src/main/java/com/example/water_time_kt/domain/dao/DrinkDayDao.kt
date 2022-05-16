@@ -3,6 +3,7 @@ package com.example.water_time_kt.domain.dao
 import androidx.room.*
 import com.example.water_time_kt.data.DrinkDay
 import com.example.water_time_kt.domain.DrinkItemsTypeConverters
+import javax.inject.Inject
 
 @Dao
 interface DrinkDayDao {

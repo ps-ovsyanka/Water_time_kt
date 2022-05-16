@@ -9,12 +9,17 @@ import com.example.water_time_kt.ui.fragments.historyFragment.HistoryFragment
 import com.example.water_time_kt.ui.fragments.mainFragment.MainFragment
 import com.example.water_time_kt.ui.fragments.settingsFragment.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), IMainActivityView {
 
-    private val presenter: MainActivityPresenter =
-        Application.injector.getIDependenciesPresenter().getMainActivityPresenter()
+    init {
+        Application.appComponent.inject(this)
+    }
+
+    @Inject
+    lateinit var presenter: MainActivityPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

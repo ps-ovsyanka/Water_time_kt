@@ -2,10 +2,11 @@ package com.example.water_time_kt.data
 
 import androidx.room.*
 import com.example.water_time_kt.domain.DrinkItemsTypeConverters
+import javax.inject.Inject
 
 @TypeConverters(DrinkItemsTypeConverters::class)
 @Entity(tableName = "DrinkDays")
-class DrinkDay(@PrimaryKey(autoGenerate = true)
+class DrinkDay (@PrimaryKey(autoGenerate = true)
                var id : Long = 0,
                var dayResult : Int = 0,
                var completed : Boolean = false,
